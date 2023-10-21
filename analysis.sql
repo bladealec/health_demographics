@@ -1,9 +1,22 @@
 SELECT *
-FROM health_data
+FROM health_data;
 
 -- 1. Find the top 3 countries with the largest increase in life expectancy from 2005 to 2015.
 
+SELECT "Life expectancy", year , country
+FROM health_data
+WHERE year BETWEEN 2005 and 2015
+ORDER BY "Life expectancy" DESC
+LIMIT 3;
+
+
 -- 2. Calculate the average 'Income composition of resources' for countries with a life expectancy above 75 in the year 2010.
+
+SELECT AVG("Income composition of resources") AS "Avg income comp of resources", year
+FROM health_data 
+WHERE "Life expectancy" > 75
+	AND year = 2010		
+GROUP BY year;
 
 -- 3. List the countries that had a decrease in 'Adult Mortality' from 2000 to 2015.
 
