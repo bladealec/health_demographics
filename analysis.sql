@@ -1,12 +1,25 @@
 SELECT *
 FROM health_data;
 
--- 1. Find the top 3 countries with the largest increase in life expectancy from 2005 to 2015.
+-- 1. Find the top 3 countries with the largest increase in life expectancy from 2005 to 2010.
 
-SELECT "Life expectancy", year , country
-FROM health_data
-WHERE year BETWEEN 2005 and 2015
-ORDER BY "Life expectancy" DESC
+SELECT health_2010.country,
+	   health_2005."Life expectancy" AS expectancy_2005,
+	   health_2010."Life expectancy" AS expectancy_2010,
+	   (health_2010."Life expectancy" - health_2005."Life expectancy") AS expectancy_diff
+
+FROM (SELECT "Life expectancy", year , country
+	  FROM health_data
+	  WHERE year = 2010) AS health_2010
+	  
+INNER JOIN (SELECT "Life expectancy", year , country
+	  		FROM health_data
+	  		WHERE year = 2005) AS health_2005
+			
+	ON health_2010.country = health_2005.country
+	
+ORDER BY expectancy_diff DESC
+
 LIMIT 3;
 
 
@@ -18,9 +31,39 @@ WHERE "Life expectancy" > 75
 	AND year = 2010		
 GROUP BY year;
 
--- 3. List the countries that had a decrease in 'Adult Mortality' from 2000 to 2015.
+
+-- 3. List the countries that had a decrease in 'Adult Mortality' from 2000 to 2010.
+
+SELECT health_2010.country,
+	   health_2000."Adult Mortality" AS adult_mortality_2005,
+	   health_2010."Adult Mortality" AS adult_mortality_2010,
+	   (health_2010."Adult Mortality" - health_2000."Adult Mortality") AS adult_mortality_diff
+
+FROM (SELECT "Adult Mortality", year , country
+	  FROM health_data
+	  WHERE year = 2010) AS health_2010
+	  
+INNER JOIN (SELECT "Adult Mortality", year , country
+	  		FROM health_data
+	  		WHERE year = 2000) AS health_2000
+			
+	ON health_2010.country = health_2000.country
+	
+WHERE (health_2010."Adult Mortality" - health_2000."Adult Mortality") < 0	
+
+ORDER BY adult_mortality_diff ASC;
+
 
 -- 4. Determine the year with the highest total 'percentage expenditure' on healthcare in 'Developed' countries.
+
+SELECT year,
+	   SUM("percentage expenditure") AS total_perc_expenditure
+FROM health_data
+WHERE status LIKE 'Developed'
+GROUP BY year
+ORDER BY total_perc_expenditure DESC
+LIMIT 1;
+
 
 -- 5. Find the country with the highest 'Total expenditure' on healthcare as a percentage of GDP in 2014.
 
