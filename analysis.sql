@@ -67,7 +67,19 @@ LIMIT 1;
 
 -- 5. Find the country with the highest 'Total expenditure' on healthcare as a percentage of GDP in 2014.
 
+SELECT country, 
+	   "Total expenditure",
+	   gdp,
+	   ("Total expenditure"/gdp) * 100 AS expenditure_per_gdp
+	   
+FROM health_data
+WHERE year = 2014
+ORDER BY expenditure_per_gdp DESC;
+
+
 -- 6. Calculate the correlation coefficient between 'Income composition of resources' and 'Schooling' across all years and countries.
+
+
 
 -- 7. Identify the country that had the steepest increase in 'HIV/AIDS' rate from 2000 to 2015.
 
