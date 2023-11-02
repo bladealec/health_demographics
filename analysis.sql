@@ -79,13 +79,44 @@ ORDER BY expenditure_per_gdp DESC;
 
 -- 6. Calculate the correlation coefficient between 'Income composition of resources' and 'Schooling' across all years and countries.
 
+SELECT CORR("Income composition of resources", schooling)	   
+FROM health_data;
 
 
--- 7. Identify the country that had the steepest increase in 'HIV/AIDS' rate from 2000 to 2015.
+-- 7. Identify the country that had the steepest increase in 'HIV/AIDS' rate from 2000 to 2010.
+
+SELECT std_2000.country,
+	   (std_2010."HIV/AIDS" - std_2000."HIV/AIDS") AS "HIV/AIDS Diff"
+	   
+FROM (SELECT country,
+	         "HIV/AIDS"
+	  FROM health_data
+	  WHERE year = 2000) AS std_2000
+
+INNER JOIN (SELECT country,
+	         "HIV/AIDS"
+	  		FROM health_data
+	  		WHERE year = 2010) AS std_2010
+			
+	ON std_2000.country = std_2010.country
+	
+ORDER BY "HIV/AIDS Diff" DESC
+LIMIT 1;
+
 
 -- 8. Calculate the average 'BMI' for countries with a population above 100 million in the year 2013.
 
--- 9. List the countries that had a decrease in 'thinness 1-19 years' from 2005 to 2015.
+SELECT AVG(BMI) AS avg_bmi
+FROM health_data
+WHERE year = 2013
+	  AND population >= 1000000;
+
+
+-- 9. List the countries that had a decrease in 'thinness 1-19 years' from 2005 to 2010.
+
+SELECT *
+FROM health_data
+
 
 -- 10. Find the year when the most countries had a 'Polio' vaccination coverage above 90%.
 
