@@ -114,8 +114,20 @@ WHERE year = 2013
 
 -- 9. List the countries that had a decrease in 'thinness 1-19 years' from 2005 to 2010.
 
-SELECT *
-FROM health_data
+SELECT thin_2005.country
+
+FROM (SELECT country, "thinness 1-19 years"
+	  FROM health_data
+	  WHERE year = 2005) AS thin_2005
+	  
+INNER JOIN (SELECT country, "thinness 1-19 years"
+			FROM health_data
+			WHERE year = 2010) AS thin_2010
+			
+		ON thin_2005.country = thin_2010.country
+		
+WHERE (thin_2010."thinness 1-19 years" - thin_2005."thinness 1-19 years") < 0;
+
 
 
 -- 10. Find the year when the most countries had a 'Polio' vaccination coverage above 90%.
