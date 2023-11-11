@@ -162,10 +162,39 @@ ORDER BY hd.alcohol DESC
 LIMIT 3;
 
 
--- 12. Calculate the average 'Total expenditure' on healthcare as a percentage of GDP for 'Developed' countries in 2015.							
+-- 12. Calculate the average 'Total expenditure' on healthcare as a percentage of GDP for 'Developed' countries in 2010.
 
--- 13. List the countries with the largest difference between 'thinness 1-19 years' and 'thinness 5-9 years' in the year 2014.
+SELECT AVG(("Total expenditure"/gdp)*100) AS avg_expenditure_per_gdp, year
+FROM health_data
+WHERE year = 2010 AND status LIKE 'Developed'
+GROUP BY year;
+
+
+-- 13. List the countries with the largest difference between 'thinness 1-19 years' and 'thinness 5-9 years' in the year 2012.
+
+SELECT country,
+	   ("thinness 1-19 years" - "thinness 5-9 years") thinness_diff,
+	   year
+FROM health_data
+WHERE year = 2012
+ORDER BY thinness_diff DESC
+LIMIT 3;
+
 
 -- 14. Find the year when the average 'GDP' was highest for 'Developing' countries.
 
+SELECT AVG(gdp) AS avg_gdp, year
+FROM health_data
+WHERE status LIKE 'Developing'
+GROUP BY year
+ORDER BY AVG(gdp) DESC
+LIMIT 3;
+
+
 -- 15. Determine the country with the highest 'Hepatitis B' vaccination coverage in the year 2013.
+
+SELECT country, "Hepatitis B", population
+FROM health_data
+WHERE year = 2013
+ORDER BY "Hepatitis B" DESC, population DESC
+LIMIT 3;
