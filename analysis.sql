@@ -131,10 +131,38 @@ WHERE (thin_2010."thinness 1-19 years" - thin_2005."thinness 1-19 years") < 0;
 
 
 -- 10. Find the year when the most countries had a 'Polio' vaccination coverage above 90%.
+-- (assuming 'polio' field is percent polio vaccination coverage)
+
+SELECT COUNT(country) vaccinated_countries, year
+FROM health_data
+WHERE polio >= 90
+GROUP BY year
+ORDER BY count(country) DESC
+LIMIT 5;
+
 
 -- 11. Determine the country with the highest 'Alcohol' consumption that also had a 'Schooling' rate above the global average in 2012.
 
--- 12. Calculate the average 'Total expenditure' on healthcare as a percentage of GDP for 'Developed' countries in 2015.
+WITH global_avg AS (
+    SELECT AVG(schooling) AS avg_global_schooling
+    FROM health_data
+    WHERE year = 2012
+)
+
+
+SELECT hd.country,
+	hd.alcohol,
+	hd.schooling,
+	ga.avg_global_schooling,
+	hd.year
+FROM health_data hd
+CROSS JOIN global_avg ga
+WHERE hd.year = 2012
+ORDER BY hd.alcohol DESC
+LIMIT 3;
+
+
+-- 12. Calculate the average 'Total expenditure' on healthcare as a percentage of GDP for 'Developed' countries in 2015.							
 
 -- 13. List the countries with the largest difference between 'thinness 1-19 years' and 'thinness 5-9 years' in the year 2014.
 
